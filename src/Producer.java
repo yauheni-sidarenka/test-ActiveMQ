@@ -43,14 +43,15 @@ public class Producer {
 
         // We will send a small text message saying 'Hello' in Russian
         TextMessage message = session.createTextMessage("Привет");
-        List<Person> list = Arrays.asList(new Person(1L, "Вася", "Пупкин"), new Person(67L, "Condolisa", "Rice"));
-        ObjectMessage objectMessage = session.createObjectMessage((java.io.Serializable) list);
 
         // Here we are sending the message!
-        producer.send(objectMessage);
-        System.out.println("Sent message '" + objectMessage.getObject() + "'");
         producer.send(message);
         System.out.println("Sent message '" + message.getText() + "'");
+
+        List<Person> list = Arrays.asList(new Person(1L, "Вася", "Пупкин"), new Person(67L, "Condolisa", "Rice"));
+        ObjectMessage objectMessage = session.createObjectMessage((java.io.Serializable) list);
+        producer.send(objectMessage);
+        System.out.println("Sent message '" + objectMessage.getObject() + "'");
 
         objectMessage.setObject(new Person(123L, "Ivan", "Ivanov"));
         producer.send(objectMessage);
