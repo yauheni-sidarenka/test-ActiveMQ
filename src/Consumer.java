@@ -9,6 +9,9 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 public class Consumer {
     // URL of the JMS server
@@ -33,6 +36,21 @@ public class Consumer {
 
         // MessageConsumer is used for receiving (consuming) messages
         MessageConsumer consumer = session.createConsumer(destination);
+
+        // browser
+        QueueBrowser browser = session.createBrowser(session.createQueue(subject));
+        Enumeration enumeration = browser.getEnumeration();
+        System.out.println("All objects in queue:");
+        while (enumeration.hasMoreElements()) {
+            Object o = enumeration.nextElement();
+            if (o instanceof TextMessage) {
+                System.out.println("\t" + ((TextMessage) o).getText().getClass().getName() + " " + ((TextMessage) o).getText());
+            } else if (o instanceof ObjectMessage) {
+                System.out.println("\t" + ((ObjectMessage) o).getObject().getClass().getName() + " " + ((ObjectMessage) o).getObject());
+            } else {
+                System.out.println("\t" + o);
+            }
+        }
 
         // Here we receive the message.
         // By default this call is blocking, which means it will wait
